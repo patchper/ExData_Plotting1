@@ -1,0 +1,20 @@
+power<-read.csv("household_power_consumption.txt",sep = ";", col.names = c("Date","Time","Global_active_power","Global_reactive_power","Voltage","Global_intensity","Sub_metering_1","Sub_metering_2","Sub_metering_3"), colClasses = c("character", "character","numeric","numeric","numeric","numeric","numeric","numeric","numeric"),na.strings="?")
+
+power <- power[(power$Date == "1/2/2007") | (power$Date == "2/2/2007"),]
+power$Time <- paste(power$Date,power$Time)
+power$Date <- as.Date(power$Date,format="%d/%m/%Y")
+power$Time <- strptime(power$Time, format="%d/%m/%Y %H:%M:%S")
+par(bg=NA)
+Sys.setlocale("LC_TIME", "English")
+
+png("plot4.png",480,480,type = "windows",bg=NA)
+par(mfrow = c(2,2))
+plot(power$Time,power$Global_active_power,type="l",ylab="Global Active Power",xlab="")
+plot(power$Time,power$Voltage,type="l",ylab="Voltage",xlab="datetime")
+plot(power$Time,power$Sub_metering_1,type="n",ylab="Engery sub metering",xlab="")
+lines(power$Time,power$Sub_metering_1,type="l")
+lines(power$Time,power$Sub_metering_2,type="l",col="red")
+lines(power$Time,power$Sub_metering_3,type="l",col="blue")
+legend("topright",legend=c("Sub_metering_1","Sub_metering_2","Sub_metering_3"),lty=c(1,1,1),col=c("black","red","blue"),cex=0.9,bty="n")
+plot(power$Time,power$Global_reactive_power,type="l",xlab="datetime",ylab="Global_reactive_power")
+dev.off()
